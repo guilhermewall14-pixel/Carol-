@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17152e">
+<title>Uma cartinha para Carol 💜</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --purple: #c7b5ff;
+  --pink: #f0c7ff;
+  --white: #fffaff;
+  --muted: #d0c9e5;
+}
+
+body {
+  min-height: 100vh;
+  padding: 20px 13px 40px;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--white);
+  background:
+    radial-gradient(ellipse at 10% 5%, #604d8c 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 80%, #414a7b 0%, transparent 40%),
+    linear-gradient(150deg, #17152e, #282143, #17182f);
+  overflow-x: hidden;
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  bottom: -30px;
+  color: #e4d8ff;
+  opacity: 0;
+  animation: floatUp linear infinite;
+  text-shadow: 0 0 12px #c7b5ff;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(.7);
+    opacity: 0;
+  }
+  15% { opacity: .65; }
+  80% { opacity: .4; }
+  100% {
+    transform: translateY(-110vh) rotate(180deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: auto;
+}
+
+.top {
+  text-align: center;
+  padding: 35px 8px 25px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #c7b5ff55;
+  background: #ffffff0a;
+  border-radius: 30px;
+  color: var(--purple);
+  font: 11px Arial, sans-serif;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+  margin-bottom: 23px;
+  animation: fadeUp .8s both;
+}
+
+h1 {
+  font-size: clamp(34px, 9vw, 49px);
+  font-weight: normal;
+  line-height: 1.2;
+  color: var(--white);
+  text-shadow: 0 0 25px #c4a5ff35;
+  animation: fadeUp .9s .1s both;
+}
+
+.top p {
+  max-width: 420px;
+  margin: 17px auto 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+  animation: fadeUp .9s .25s both;
+}
+
+.card {
+  border: 1px solid #d2c2ff2e;
+  background: #ffffff0b;
+  backdrop-filter: blur(12px);
+  border-radius: 25px;
+  padding: clamp(20px, 5vw, 34px);
+  box-shadow: 0 18px 55px #00000025;
+}
+
+.scene {
+  text-align: center;
+  animation: fadeUp .8s .25s both;
+}
+
+.envelope-area {
+  min-height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 800px;
+}
+
+.envelope {
+  position: relative;
+  width: 190px;
+  height: 125px;
+  background: #b5a2ec;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 18px 35px #00000035;
+  transition: transform .4s;
+  animation: envelopeFloat 3s ease-in-out infinite;
+}
+
+.envelope:hover {
+  transform: translateY(-5px) rotate(-2deg);
+}
+
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #d6c8ff;
+  clip-path: polygon(0 0, 50% 60%, 100% 0);
+  transform-origin: top;
+  transition: transform .7s ease;
+  z-index: 3;
+}
+
+.envelope::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #8f7cc8;
+  clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+  border-radius: 0 0 8px 8px;
+  z-index: 2;
+}
+
+.envelope.opened::before {
+  transform: rotateX(180deg);
+}
+
+.envelope.opened {
+  animation: none;
+  transform: translateY(10px);
+}
+
+.letter-inside {
+  position: absolute;
+  z-index: 1;
+  width: 82%;
+  height: 95px;
+  left: 9%;
+  top: 8px;
+  padding: 15px 5px;
+  background: #fffaff;
+  color: #55436e;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: transform .8s ease .25s;
+}
+
+.envelope.opened .letter-inside {
+  transform: translateY(-75px);
+}
+
+.seal {
+  position: absolute;
+  z-index: 4;
+  width: 35px;
+  height: 35px;
+  left: calc(50% - 17px);
+  top: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #f1c9ee;
+  color: #6d477e;
+  font-size: 17px;
+  box-shadow: 0 3px 10px #00000020;
+  transition: opacity .3s, transform .3s;
+}
+
+.envelope.opened .seal {
+  opacity: 0;
+  transform: scale(.5);
+}
+
+.tap-hint {
+  color: var(--muted);
+  font: 13px Arial, sans-serif;
+  margin-top: 5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes envelopeFloat {
+  0%, 100% { transform: translateY(0) rotate(1deg); }
+  50% { transform: translateY(-9px) rotate(-1deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: .6; }
+  50% { opacity: 1; }
+}
+
+button {
+  font: 14px Arial, sans-serif;
+  cursor: pointer;
+  border-radius: 13px;
+  padding: 14px 18px;
+  transition: transform .2s, background .2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.primary {
+  width: 100%;
+  border: none;
+  background: linear-gradient(120deg, #c5b1ff, #e2c4fa);
+  color: #2e2347;
+  font-weight: bold;
+  margin-top: 22px;
+  box-shadow: 0 5px 18px #0000001a;
+}
+
+.secondary {
+  width: 100%;
+  border: 1px solid #c7b5ff55;
+  background: #ffffff09;
+  color: var(--white);
+  margin-top: 12px;
+}
+
+.small-note {
+  color: #bcb4d5;
+  font: 12px Arial, sans-serif;
+  line-height: 1.7;
+  margin-top: 18px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.fade-in {
+  animation: fadeUp .75s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat {
+  text-align: center;
+}
+
+.chat-icon {
+  font-size: 34px;
+  display: block;
+  margin-bottom: 16px;
+  animation: bob 2.5s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(4deg); }
+}
+
+.chat h2 {
+  font-weight: normal;
+  font-size: 25px;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+
+.chat p {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 22px;
+}
+
+.dots span {
+  width: 7px;
+  height: 7px;
+  background: var(--purple);
+  border-radius: 50%;
+  animation: dot 1s infinite;
+}
+
+.dots span:nth-child(2) { animation-delay: .15s; }
+.dots span:nth-child(3) { animation-delay: .3s; }
+
+@keyframes dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+.letter {
+  color: #eee9fb;
+}
+
+.letter-label {
+  font: 11px Arial, sans-serif;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+
+.letter p {
+  font-size: 16px;
+  line-height: 1.95;
+  margin-bottom: 19px;
+}
+
+.letter strong {
+  color: #e0d4ff;
+  font-weight: normal;
+}
+
+.signature {
+  margin-top: 28px;
+  color: var(--purple);
+  font-size: 20px;
+  font-style: italic;
+}
+
+.final {
+  text-align: center;
+  border-top: 1px solid #c8b9ff30;
+  margin-top: 25px;
+  padding-top: 25px;
+}
+
+.final .star {
+  display: inline-block;
+  font-size: 28px;
+  color: var(--purple);
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.final h2 {
+  color: var(--purple);
+  font-weight: normal;
+  font-size: 24px;
+  margin: 15px 0;
+}
+
+.final p {
+  color: var(--muted);
+  line-height: 1.9;
+  font-size: 15px;
+}
+
+.footer {
+  text-align: center;
+  font: 12px Arial, sans-serif;
+  color: #b9b0d4;
+  line-height: 1.8;
+  margin-top: 25px;
+}
+
+@media (max-width: 390px) {
+  .envelope-area { min-height: 210px; }
+  .letter p { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div id="particles" aria-hidden="true"></div>
+
+<main class="container">
+
+  <header class="top">
+    <div class="tag">uma pequena mensagem</div>
+    <h1>Oi, Carol <span style="color:#d4c4ff">✦</span></h1>
+    <p>
+      Prometo que não é uma prova, nem uma cobrança.
+      Só queria deixar uma coisa que talvez eu devesse ter dito antes.
+    </p>
+  </header>
+
+  <section class="card">
+
+    <div id="scene1" class="scene">
+      <div class="envelope-area">
+        <div class="envelope" id="envelope" onclick="openEnvelope()" role="button" tabindex="0" aria-label="Abrir envelope">
+          <div class="letter-inside">Uma cartinha<br>para Carol ✉</div>
+          <div class="seal">✦</div>
+        </div>
+      </div>
+
+      <p class="tap-hint">Tem uma cartinha aqui. Toque no envelope.</p>
+
+      <button class="primary" onclick="openEnvelope()">
+        Abrir cartinha ✉
+      </button>
+
+      <p class="small-note">
+        Pode ler no seu tempo. Não precisa responder a nada.
+      </p>
+    </div>
+
+    <div id="scene2" class="chat hidden">
+      <span class="chat-icon">💭</span>
+      <h2>Antes de tudo...</h2>
+      <p>
+        Eu fiquei pensando em como começar isso sem deixar tudo estranho.
+      </p>
+      <div class="dots"><span></span><span></span><span></span></div>
+      <button class="primary" onclick="nextScene(2)">
+        Pode continuar
+      </button>
+    </div>
+
+    <div id="scene3" class="chat hidden">
+      <span class="chat-icon">🌙</span>
+      <h2>Então, aqui vai.</h2>
+      <p>
+        Não quero fingir que nada aconteceu, nem inventar uma desculpa bonita.
+        Prefiro falar com sinceridade sobre o que fiz.
+      </p>
+      <button class="primary" onclick="nextScene(3)">
+        Ler o que eu queria dizer
+      </button>
+    </div>
+
+    <article id="scene4" class="letter hidden">
+      <p class="letter-label">Uma carta para Carol</p>
+
+      <p>Oi, Carol.</p>
+
+      <p>
+        Eu queria te pedir desculpas pela forma como agi quando te pedi em namoro
+        e depois disse que não gostava de você.
+      </p>
+
+      <p>
+        A verdade é que fiquei com medo e vergonha depois de fazer aquele pedido.
+        Em vez de lidar com o que estava sentindo e conversar com você de forma
+        honesta, acabei dizendo algo que contradizia o que tinha acabado de fazer.
+      </p>
+
+      <p>
+        Isso não justifica minha atitude. Eu poderia ter sido mais cuidadoso
+        com as suas emoções e pensado melhor antes de falar. Imagino que essa
+        situação possa ter te confundido, magoado ou feito você questionar
+        minhas intenções. Sinto muito por ter colocado você nessa posição.
+      </p>
+
+      <p>
+        Você não merecia receber mensagens contraditórias de alguém que era seu amigo.
+        Eu deveria ter lidado com meu medo de uma maneira mais madura, em vez
+        de deixar que ele decidisse minhas palavras.
+      </p>
+
+      <p>
+        Não estou escrevendo isso para inventar uma desculpa para o que aconteceu,
+        nem para pedir que tudo volte a ser como antes. Quero reconhecer que
+        errei e assumir a responsabilidade pela maneira como te tratei.
+      </p>
+
+      <p>
+        Sinto falta do que nossa amizade representava, mas entendo que você tem
+        seus próprios sentimentos e que talvez as coisas não possam voltar a ser
+        como eram. Respeito isso.
+      </p>
+
+      <p>
+        Você não precisa me perdoar, responder a esta mensagem ou retomar nossa
+        amizade. Não quero que você sinta qualquer obrigação por causa deste site.
+      </p>
+
+      <p>
+        Só queria que soubesse que sinto muito, Carol. Se eu pudesse voltar
+        àquele momento, teria conversado com você com mais honestidade e cuidado.
+      </p>
+
+      <p>
+        Obrigado pelos momentos bons que compartilhamos. Independentemente
+        do que acontecer daqui para a frente, espero sinceramente que você fique bem.
+      </p>
+
+      <p class="signature">Desculpa, de verdade.</p>
+
+      <button class="primary" onclick="nextScene(4)">
+        Uma última coisinha...
+      </button>
+    </article>
+
+    <div id="scene5" class="final hidden">
+      <span class="star">✦</span>
+      <h2>Sem cobranças, de verdade.</h2>
+
+      <p>
+        Este pedido de desculpas não vem com uma expectativa escondida.
+        Você pode seguir seu caminho, guardar o que fizer sentido e deixar
+        o restante para trás.
+      </p>
+
+      <p style="margin-top:16px">
+        Eu só queria reconhecer meu erro e te desejar coisas boas.
+        Não precisa responder. Espero que fique bem, Carol.
+      </p>
+
+      <p style="margin-top:25px;color:#d5c8f6">
+        Obrigado por ter lido até aqui. 💜
+      </p>
+
+      <button class="secondary" onclick="replay()" style="margin-top:25px">
+        Ver a cartinha novamente
+      </button>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <p>Feito com sinceridade, sem esperar nada em troca.</p>
+    <p>💜</p>
+  </footer>
+
+</main>
+
+<script>
+const particles = document.getElementById("particles");
+const symbols = ["✦", "✧", "·", "♡", "✩"];
+
+for (let i = 0; i < 24; i++) {
+  const particle = document.createElement("span");
+  particle.className = "particle";
+  particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+  particle.style.left = Math.random() * 100 + "%";
+  particle.style.animationDuration = (10 + Math.random() * 15) + "s";
+  particle.style.animationDelay = (-Math.random() * 20) + "s";
+  particle.style.fontSize = (10 + Math.random() * 13) + "px";
+  particles.appendChild(particle);
+}
+
+function openEnvelope() {
+  const envelope = document.getElementById("envelope");
+
+  if (envelope.classList.contains("opened")) return;
+
+  envelope.classList.add("opened");
+
+  setTimeout(() => {
+    showScene("scene1", "scene2");
+  }, 900);
+}
+
+document.getElementById("envelope").addEventListener("keydown", function(event) {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openEnvelope();
+  }
+});
+
+function showScene(oldId, newId) {
+  const oldScene = document.getElementById(oldId);
+  const newScene = document.getElementById(newId);
+
+  oldScene.classList.add("hidden");
+  newScene.classList.remove("hidden");
+  newScene.classList.remove("fade-in");
+
+  void newScene.offsetWidth;
+  newScene.classList.add("fade-in");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function nextScene(current) {
+  const next = current + 1;
+  showScene("scene" + current, "scene" + next);
+}
+
+function replay() {
+  for (let i = 2; i <= 5; i++) {
+    document.getElementById("scene" + i).classList.add("hidden");
+  }
+
+  document.getElementById("scene1").classList.remove("hidden");
+  document.getElementById("envelope").classList.remove("opened");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+</script>
+</body>
+</html>
